@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<title>Hazop</title>
+</h:head>
+<h:body>
+
+	<h3 align="right">Author : Vaibhav Gupta</h3>
+	<h:form>
+
+		<p:growl id="msgs" showDetail="true" escape="false" />
+
+		<h3>Input with Checkbox</h3>
+		<h3 style="margin-top: 0">(Select checkboxes and click 'Update
+			Output' button)</h3>
+		<p:tree id="input" value="#{treeSelectionView.root3}" var="doc"
+			animate="true" selectionMode="checkbox"
+			selection="#{treeSelectionView.selectedNodes2}">
+			<p:treeNode icon="ui-icon-note">
+				<h:outputText value="#{doc.name}" />
+			</p:treeNode>
+			<p:treeNode type="document" icon="ui-icon-document">
+				<h:outputText value="#{doc.name}" />
+			</p:treeNode>
+			<p:treeNode type="picture" icon="ui-icon-image">
+				<h:outputText value="#{doc.name}" />
+			</p:treeNode>
+			<p:treeNode type="mp3" icon="ui-icon-video">
+				<h:outputText value="#{doc.name}" />
+			</p:treeNode>
+		</p:tree>
+
+		<p:commandButton value="Update Output" update="output,msgs"
+			icon="ui-icon-newwin"
+			actionListener="#{treeSelectionView.displaySelectedMultiple(treeSelectionView.selectedNodes2)}" />
+		<br />
+		<br />
+
+		<h3 style="margin-top: 0">Output With Drag Drop (Initially Empty)</h3>
+		<h3 style="margin-top: 0">(Note1: Right click on selected node to
+			add new node or delete)</h3>
+		<h3 style="margin-top: 0">(Note2: Try Drag and drop nodes
+			functionality)</h3>
+		<p:tree id="output" value="#{treeSelectionView.root1}" var="doc"
+			animate="true" selectionMode="single"
+			selection="#{treeSelectionView.selectedNode}" draggable="true"
+			droppable="true" dynamic="true">
+			<p:ajax event="dragdrop" listener="#{treeSelectionView.onDragDrop}" />
+			<p:treeNode icon="ui-icon-note">
+				<h:outputText value="#{doc.name}" />
+			</p:treeNode>
+			<p:treeNode type="document" icon="ui-icon-document">
+				<h:outputText value="#{doc.name}" />
+			</p:treeNode>
+
+		</p:tree>
+
+
+		<p:contextMenu for="output">
+			<p:menuitem value="Add" id="add" update="msgs,output"
+				icon="ui-icon-disk" />
+			<p:menuitem value="Delete" update="output"
+				actionListener="#{treeSelectionView.deleteNode}"
+				icon="ui-icon-close" />
+		</p:contextMenu>
+
+
+		<p:overlayPanel widgetVar="addOP" id="addPanel" showCloseIcon="true"
+			for="add" hideEffect="fade" dynamic="true">
+			<p:outputPanel>Add new Node</p:outputPanel>
+			<p:inputText id="newNode" value="#{treeSelectionView.newNode}"></p:inputText>
+			<p:commandButton value="OK" update="msgs,output"
+				icon="ui-icon-newwin" oncomplete="PF('addOP').hide()"
+				actionListener="#{treeSelectionView.addNode}" />
+		</p:overlayPanel>
+
+
+
+		<p:commandButton value="Display" update="msgs" icon="ui-icon-newwin"
+			actionListener="#{treeSelectionView.displaySelectedSingle}" />
+	</h:form>
+</h:body>
+</html>
